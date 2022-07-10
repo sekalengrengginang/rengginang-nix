@@ -15,13 +15,13 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.loader.timeout =0;
-  # boot kernel
+  # boot kernel config
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelParams = [ "amdgpu" ];
-
+  boot.kernelParams = [ "quiet" ];
+  boot.supportedFilesystems = [ "ntfs" ];
   # Zram
   zramSwap.enable = true;	
-  networking.hostName = "Morfonica"; # Define your hostname.
+  networking.hostName = "foo"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -78,9 +78,9 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.mashiro = {
+  users.users.foo = {
     isNormalUser = true;
-    description = "mashiro";
+    description = "";
     extraGroups = [ "networkmanager""libvirtd" "wheel" ];
     packages = with pkgs; [
       
@@ -89,6 +89,13 @@
   
   # Gnome keyring
   services.gnome.gnome-keyring.enable = true;
+  security.pam.services.sddm.enableGnomeKeyring = true;
+  
+  # auto mount storage
+  services.devmon.enable = true;
+  services.gvfs.enable = true;
+  services.udisks2.enable = true;
+
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -111,12 +118,10 @@
   dotnet-sdk
   gcc
   git
-
   # multimedia
   vlc
   yt-dlp
   gtk-pipe-viewer
-  spotify
   mpv
   # virtualization
   virt-manager
@@ -144,7 +149,7 @@
   };	
 
   # Storage optimization
-  nix.autoOptimiseStore = true;
+  nix.settings.auto-optimise-store = true;
   nix.gc = {
   automatic = true;
   dates = "weekly";
@@ -165,10 +170,10 @@
   
 
   # Plymouth
-  boot.plymouth={
-  enable=true;
-  theme = "bgrt";
-};
+  #boot.plymouth={
+  #enable=true;
+  #theme = "bgrt";
+  #};
 
   # List services that you want to enable:
   # use flatpak
